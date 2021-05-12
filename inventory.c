@@ -6,6 +6,7 @@
 #include<ctype.h>                   
 #include<dos.h>                    
 #include<time.h>
+int randomize(int random_num);
 void login();
 void menu();
 void add();
@@ -127,11 +128,11 @@ void add()
                     scanf("%i", &num);
                     
                        for(i = 0; i < num; i++)
-					   {
-                           printf("\n\n\tID: ");
-                           scanf("%d", &prod[i].ID);
+					   {	
+					   	   prod[i].ID=randomize(prod[i].ID);
+                           printf("\n\n\tID:%d\n",prod[i].ID);
                            fflush(stdin);
-                          
+                           
                            printf("\n\tProduct name: ");
                            gets(prod[i].name);
                            fflush(stdin);
@@ -184,4 +185,8 @@ void view()
             menu();
         else
             exit(2);
+}
+int randomize(int random_num)
+{
+	return random_num = (rand() % (100000 - 999999 + 1)) + 100000;
 }
