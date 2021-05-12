@@ -1,10 +1,8 @@
-#include<windows.h>
 #include<stdio.h>
 #include<conio.h>
-#include <stdlib.h>
+#include<stdlib.h>
 #include<string.h>                 
-#include<ctype.h>                   
-#include<dos.h>                    
+#include<ctype.h>                        
 #include<time.h>
 int randomize(int random_num);
 void login();
@@ -26,60 +24,11 @@ int main()
 	menu();
 return 0;
 }
-void switcher(int var)
-{
-	switch(var)
-	{
-		case 1:
-		{	
-			add();
-			break;
-		}
-		case 2:
-		{
-			edit();
-			break;
-		}
-		case 3:
-		{	
-			view();
-			break;
-		}
-		case 4:
-		{
-			system("cls");
-			printf("Thank you for using This product\n");
-			printf("Copyright: 2021\n");
-			exit(1);
-			break;
-		}
-	}
-}
-void menu()
-{
-	int var;
-	do
-	{
-		system("cls");	
-		printf("\n\n			What do you want to do?\n\n");
-	
-		printf("                            1.Add inventory\n");
-		printf("                           -------------------\n");
-		printf("                            2.Edit inventory\n");
-		printf("                           -------------------\n");
-		printf("                            3.View inventory\n");
-		printf("                           -------------------\n");
-		printf("                            4.Exit\n");
-		printf("------------------------------------------------------------------\n");
-		printf("Answer: ");
-		scanf("%d",&var);
-	}while(var>=5 || var<=0);
-	switcher(var);
-}
+//Major functions
 void login()
 {
 	system("cls");
-	char password[10]={"1234"};
+	char password[10]={"user"};
 	char d[25]="Password Protected";
 	char ch,pass[10];
 	int i=0,j;
@@ -116,6 +65,7 @@ void add()
         FILE *file1;          // pero d pa to tapos kase pano kung may parehong ID ganern
         int i, num;
         char x;
+        char temp[200];
         
         if((file1 = fopen("products.txt", "a+")) == NULL)
             printf("Error: The file does not exist");
@@ -123,7 +73,6 @@ void add()
 			{
                 system("cls");
                     printf("'\t\tADD RECORD OF PRODUCT");
-                    
                     printf("\n\n\tHow many product do you want add in record? ");
                     scanf("%i", &num);
                     
@@ -132,7 +81,7 @@ void add()
 					   	   prod[i].ID=randomize(prod[i].ID);
                            printf("\n\n\tID:%d\n",prod[i].ID);
                            fflush(stdin);
-                           
+                           printf("\n\n\tNOTE: please use underscore instead of spaces\n");
                            printf("\n\tProduct name: ");
                            gets(prod[i].name);
                            fflush(stdin);
@@ -173,20 +122,71 @@ void view()
         system("cls");
         printf("\t\t\t\tRECORDDS\n\n");
         printf("\tID \t\tNAME \t\tAMOUNT \t\tPRICE\n\n");
-                    for(i = 0; !feof(fp); i++){
-                        fscanf(fp, "%d %s %d %f\n", &record[i].ID, &record[i].name, &record[i].amount, &record[i].price);
-                       printf("        %d            %s          %d             %.2f\n", record[i].ID, record[i].name, record[i].amount, record[i].price);
+                    for(i = 0; !feof(fp); i++)
+					{
+                    	fscanf(fp, "%d %s %d %f\n", &record[i].ID, &record[i].name, &record[i].amount, &record[i].price);
+  						
+						printf("        %d            %s          %d             %5.2f\n", record[i].ID, record[i].name, record[i].amount, record[i].price);
                     }
         fclose(fp);
         
-        printf("\n\tDo you want to go Menu (y/n)?");
-        scanf(" %c", &x);
-        if(x == 'y')
-            menu();
-        else
-            exit(2);
+        printf("\n\nPress any key to retrun to main menu\n\n");
+		getch();
+		menu();
+}
+//minor functions
+void menu()
+{
+	int var;
+	do
+	{
+		system("cls");	
+		printf("\n\n			What do you want to do?\n\n");
+	
+		printf("                            1.Add inventory\n");
+		printf("                           -------------------\n");
+		printf("                            2.Edit inventory\n");
+		printf("                           -------------------\n");
+		printf("                            3.View inventory\n");
+		printf("                           -------------------\n");
+		printf("                            4.Exit\n");
+		printf("------------------------------------------------------------------\n");
+		printf("Answer: ");
+		scanf("%d",&var);
+	}while(var>=5 || var<=0);
+	switcher(var);
 }
 int randomize(int random_num)
 {
+	srand(time(NULL)); // randomize seed
 	return random_num = (rand() % (100000 - 999999 + 1)) + 100000;
+}
+void switcher(int var)
+{
+	switch(var)
+	{
+		case 1:
+		{	
+			add();
+			break;
+		}
+		case 2:
+		{
+			edit();
+			break;
+		}
+		case 3:
+		{	
+			view();
+			break;
+		}
+		case 4:
+		{
+			system("cls");
+			printf("               Thank you for using This product\n");
+			printf("                        Copyright: 2021\n");
+			exit(1);
+			break;
+		}
+	}
 }
