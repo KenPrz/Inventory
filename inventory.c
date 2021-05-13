@@ -4,6 +4,8 @@
 #include<string.h>                 
 #include<ctype.h>                        
 #include<time.h>
+#include<windows.h>
+COORD coord = {0, 0};
 int randomize(int random_num);
 void login();
 void menu();
@@ -11,6 +13,11 @@ void add();
 void edit();
 void view();
 void switcher(int var);
+void gotoxy (int x, int y)
+{
+coord.X = x; coord.Y = y; 
+SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+}
 struct product
 {
 	int ID,amount;
@@ -115,18 +122,27 @@ void view()
 {
         struct product record[200];
         FILE *fp;
-        int i, x;
+        int i, j=4;
         
         fp = fopen ("products.txt", "r");
         
         system("cls");
         printf("\t\t\t\tRECORDDS\n\n");
-        printf("\tID \t\tNAME \t\tAMOUNT \t\tPRICE\n\n");
-                    for(i = 0; !feof(fp); i++)
+        printf("\n ID           NAME          AMOUNT          PRICE");
+                    while(!feof(fp))
 					{
                     	fscanf(fp, "%d %s %d %f\n", &record[i].ID, &record[i].name, &record[i].amount, &record[i].price);
-  						
-						printf("        %d            %s          %d             %5.2f\n", record[i].ID, record[i].name, record[i].amount, record[i].price);
+						    gotoxy(1,j);
+							printf("%d",record[i].ID);
+							gotoxy(14,j);
+							printf("%s",record[i].name);
+							gotoxy(28,j);
+							printf("%d",record[i].amount);
+							gotoxy(44,j);
+							printf("%5.2f",record[i].price);
+							gotoxy(50,j);
+							printf("\n\n");
+							i++,j++;
                     }
         fclose(fp);
         
