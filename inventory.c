@@ -12,6 +12,7 @@ void menu();
 void add();
 void edit();
 void view();
+void search();
 void switcher(int var);
 void gotoxy (int x, int y)
 {
@@ -150,6 +151,141 @@ void view()
 		getch();
 		menu();
 }
+void search()
+{
+	    struct product record[200];
+        int var,id,i;
+        int checker=0;
+        char name[200];
+		FILE *file1;
+        file1 = fopen ("products.txt", "r");
+        	if(file1==NULL)
+			{
+				printf("Error in Record search function\n");
+        		exit(1);
+			}
+			else
+			{
+				do
+				{
+				system("cls");
+				gotoxy(10,7);
+				printf("v Search v\n");
+				gotoxy(8,10);
+				printf("1. Search By ID\n");
+				gotoxy(8,12);
+				printf("2. Search By Name\n");
+				gotoxy(8,14);
+				printf("Answer: ");
+				scanf("%d",&var);
+				}while(var>=3 || var<=0);
+				switch(var)
+				{
+					case 1:
+					{
+						system("cls");
+						gotoxy(25,4);
+						
+						printf("ID SEARCH\n\n");
+						gotoxy(20,5);
+						printf("ID: ");
+						scanf("%d",&id);
+						gotoxy(20,7);
+                    	
+						while(!feof(file1))
+						{
+                    		fscanf(file1, "%d %s %d %f\n", &record[i].ID, &record[i].name, &record[i].amount, &record[i].price);
+							if(record[i].ID==id)
+							{	checker=1;
+								printf("ID: %d\n",record[i].ID);
+								gotoxy(20,8);
+								printf("NAME: %s\n",record[i].name);
+								gotoxy(20,9);
+								printf("Amount: %d\n",record[i].amount);
+								gotoxy(20,10);
+								printf("PRICE: %5.2f\n",record[i].price);
+								printf("\n\n");
+								
+								printf("Search again? y/n\n");
+								if(getch()=='y')
+								{
+									search();
+								}
+								else
+								{
+									menu();
+								}
+							}
+							if(checker!=1)
+							{
+								gotoxy(20,12);
+								printf("No Entry found!!\n");
+								gotoxy(20,14);
+								printf("Press any key to search again\n");
+								getch();
+								search();
+									
+							}
+						i++;					
+						}
+					break;
+					menu();
+					}
+					case 2:
+					{	
+												system("cls");
+						gotoxy(25,4);
+						
+						printf("NAME SEARCH\n\n");
+						gotoxy(20,5);
+						printf("NAME: ");
+						scanf("%s",&name);
+						gotoxy(20,7);
+                    	
+						while(!feof(file1))
+						{
+                    		fscanf(file1, "%d %s %d %f\n", &record[i].ID, &record[i].name, &record[i].amount, &record[i].price);
+							if(strcmp(record[i].name,name)==0)
+							{
+								checker=1;
+								printf("ID: %d\n",record[i].ID);
+								gotoxy(20,8);
+								printf("NAME: %s\n",record[i].name);
+								gotoxy(20,9);
+								printf("Amount: %d\n",record[i].amount);
+								gotoxy(20,10);
+								printf("PRICE: %5.2f\n",record[i].price);
+								printf("\n\n");
+								printf("Search again? y/n\n");
+								if(getch()=='y')
+								{
+									search();
+								}
+								else
+								{
+									menu();
+								}
+							}
+							if(checker!=1)
+							{
+								gotoxy(20,12);
+								printf("No Entry found!!\n");
+								gotoxy(20,14);								
+								printf("Press any key to search again\n");
+								getch();
+								search();	
+							}
+						i++;					
+						}
+						break;
+						menu();	
+						break;
+					}
+				}
+			}
+	fclose(file1);
+	}
+
 //minor functions
 void menu()
 {
@@ -165,11 +301,13 @@ void menu()
 		printf("                           -------------------\n");
 		printf("                            3.View inventory\n");
 		printf("                           -------------------\n");
-		printf("                            4.Exit\n");
+		printf("                            4.Search inventory\n");
+		printf("                           -------------------\n");
+		printf("                            5.Exit\n");
 		printf("------------------------------------------------------------------\n");
 		printf("Answer: ");
 		scanf("%d",&var);
-	}while(var>=5 || var<=0);
+	}while(var>=6 || var<=0);
 	switcher(var);
 }
 int randomize(int random_num)
@@ -197,6 +335,11 @@ void switcher(int var)
 			break;
 		}
 		case 4:
+		{
+			search();
+			break;
+		}
+		case 5:
 		{
 			system("cls");
 			printf("               Thank you for using This product\n");
