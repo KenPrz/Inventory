@@ -118,18 +118,21 @@ void edit()
 {	
 	system("cls");
 	printf("Inventory Editing goes here");
+	getch();
+	menu();
 }
 void view()
 {
         struct product record[200];
         FILE *fp;
         int i, j=4;
+        float profit,temp;
         
         fp = fopen ("products.txt", "r");
         
         system("cls");
         printf("\t\t\t\tRECORDDS\n\n");
-        printf("\n ID           NAME          AMOUNT          PRICE");
+        printf("\n ID           NAME          AMOUNT          PRICE          EXPECTED PROFIT");
                     while(!feof(fp))
 					{
                     	fscanf(fp, "%d %s %d %f\n", &record[i].ID, &record[i].name, &record[i].amount, &record[i].price);
@@ -141,10 +144,15 @@ void view()
 							printf("%d",record[i].amount);
 							gotoxy(44,j);
 							printf("%5.2f",record[i].price);
-							gotoxy(50,j);
+							gotoxy(59,j);
+							printf("%.2f\n",record[i].price*record[i].amount);
+							temp=record[i].price*record[i].amount;
+							profit=profit+temp;
 							printf("\n\n");
 							i++,j++;
                     }
+                    printf("-------------------------------------------------\n");
+                    printf(" OVERALL EXPECTED PROFIT: Php %.2f",profit);
         fclose(fp);
         
         printf("\n\nPress any key to retrun to main menu\n\n");
@@ -176,9 +184,11 @@ void search()
 				gotoxy(8,12);
 				printf("2. Search By Name\n");
 				gotoxy(8,14);
+				printf("3.Return to menu\n");
+				gotoxy(8,15);
 				printf("Answer: ");
 				scanf("%d",&var);
-				}while(var>=3 || var<=0);
+				}while(var>=4 || var<=0);
 				switch(var)
 				{
 					case 1:
@@ -233,7 +243,7 @@ void search()
 					}
 					case 2:
 					{	
-												system("cls");
+						system("cls");
 						gotoxy(25,4);
 						
 						printf("NAME SEARCH\n\n");
@@ -273,12 +283,17 @@ void search()
 								gotoxy(20,14);								
 								printf("Press any key to search again\n");
 								getch();
-								search();	
+								search();
 							}
 						i++;					
 						}
 						break;
 						menu();	
+						break;
+					}
+					case 3:
+					{
+						menu();
 						break;
 					}
 				}
@@ -297,7 +312,7 @@ void menu()
 	
 		printf("                            1.Add inventory\n");
 		printf("                           -------------------\n");
-		printf("                            2.Edit inventory\n");
+		printf("                            2.Edit/Update inventory\n");
 		printf("                           -------------------\n");
 		printf("                            3.View inventory\n");
 		printf("                           -------------------\n");
