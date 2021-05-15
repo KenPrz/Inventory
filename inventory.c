@@ -86,6 +86,8 @@ void add()
                     
                        for(i = 0; i < num; i++)
 					   {	
+					   	   system("cls");
+					   	   printf("PRODUCT #%d:\n",i+1);
 					   	   prod[i].ID=randomize(prod[i].ID);
                            printf("\n\n\tID:%d\n",prod[i].ID);
                            fflush(stdin);
@@ -123,9 +125,9 @@ void edit()
 }
 void view()
 {
-        struct product record[200];
+        struct product record;
         FILE *fp;
-        int i, j=4;
+        int i, j=4,ID;
         float profit,temp;
         
         fp = fopen ("products.txt", "r");
@@ -135,18 +137,18 @@ void view()
         printf("\n ID           NAME          AMOUNT          PRICE          EXPECTED PROFIT");
                     while(!feof(fp))
 					{
-                    	fscanf(fp, "%d %s %d %f\n", &record[i].ID, &record[i].name, &record[i].amount, &record[i].price);
+                    	fscanf(fp, "%d %s %d %f\n", &record.ID, &record.name, &record.amount, &record.price);
 						    gotoxy(1,j);
-							printf("%d",record[i].ID);
+							printf("%d",record.ID);
 							gotoxy(14,j);
-							printf("%s",record[i].name);
+							printf("%s",record.name);
 							gotoxy(28,j);
-							printf("%d",record[i].amount);
+							printf("%d",record.amount);
 							gotoxy(44,j);
-							printf("%5.2f",record[i].price);
+							printf("%5.2f",record.price);
 							gotoxy(59,j);
-							printf("%.2f\n",record[i].price*record[i].amount);
-							temp=record[i].price*record[i].amount;
+							printf("%.2f\n",record.price*record.amount);
+							temp=record.price*record.amount;
 							profit=profit+temp;
 							printf("\n\n");
 							i++,j++;
@@ -161,145 +163,104 @@ void view()
 }
 void search()
 {
-	    struct product record[200];
-        int var,id,i;
-        int checker=0;
-        char name[200];
-		FILE *file1;
-        file1 = fopen ("products.txt", "r");
-        	if(file1==NULL)
-			{
-				printf("Error in Record search function\n");
-        		exit(1);
-			}
-			else
-			{
-				do
-				{
-				system("cls");
-				gotoxy(10,7);
-				printf("v Search v\n");
-				gotoxy(8,10);
-				printf("1. Search By ID\n");
-				gotoxy(8,12);
-				printf("2. Search By Name\n");
-				gotoxy(8,14);
-				printf("3.Return to menu\n");
-				gotoxy(8,15);
-				printf("Answer: ");
-				scanf("%d",&var);
-				}while(var>=4 || var<=0);
-				switch(var)
-				{
-					case 1:
+	struct product record;
+    FILE *file1;
+    int i, j=4,checker=0;
+    int answer,ID;
+    char name[200];
+    file1 = fopen ("products.txt", "r");    
+    
+    do
+    {	
+		system("cls");
+    	printf("\n\n\t\t\tSearch by?\n");
+    	printf("\t\t\t1.ID\n");
+    	printf("\t\t\t2.Name\n");
+    	printf("\t\t\t3.Return to menu\n");
+    	printf("\t\t\t----------------------------\n");
+    	printf("\t\t\tAnswer: ");
+    	scanf("%d",&answer);
+	}while(answer>=4 || answer<=0);
+	
+		switch(answer)
+		{
+			case 1:
+			{	system("cls");
+				printf("\n\t\t\tSEARCH BY ID\n");
+				printf("\t\t\tID: ");
+				scanf("%d",&ID);
+				
+				while(!feof(file1))
 					{
-						system("cls");
-						gotoxy(25,4);
-						
-						printf("ID SEARCH\n\n");
-						gotoxy(20,5);
-						printf("ID: ");
-						scanf("%d",&id);
-						gotoxy(20,7);
-                    	
-						while(!feof(file1))
-						{
-                    		fscanf(file1, "%d %s %d %f\n", &record[i].ID, &record[i].name, &record[i].amount, &record[i].price);
-							if(record[i].ID==id)
-							{	checker=1;
-								printf("ID: %d\n",record[i].ID);
-								gotoxy(20,8);
-								printf("NAME: %s\n",record[i].name);
-								gotoxy(20,9);
-								printf("Amount: %d\n",record[i].amount);
-								gotoxy(20,10);
-								printf("PRICE: %5.2f\n",record[i].price);
-								printf("\n\n");
-								
-								printf("Search again? y/n\n");
-								if(getch()=='y')
-								{
-									search();
-								}
-								else
-								{
-									menu();
-								}
-							}
-							if(checker!=1)
-							{
-								gotoxy(20,12);
-								printf("No Entry found!!\n");
-								gotoxy(20,14);
-								printf("Press any key to search again\n");
-								getch();
-								search();
-									
-							}
-						i++;					
-						}
-					break;
-					menu();
-					}
-					case 2:
-					{	
-						system("cls");
-						gotoxy(25,4);
-						
-						printf("NAME SEARCH\n\n");
-						gotoxy(20,5);
-						printf("NAME: ");
-						scanf("%s",&name);
-						gotoxy(20,7);
-                    	
-						while(!feof(file1))
-						{
-                    		fscanf(file1, "%d %s %d %f\n", &record[i].ID, &record[i].name, &record[i].amount, &record[i].price);
-							if(strcmp(record[i].name,name)==0)
-							{
+                    	fscanf(file1, "%d %s %d %f\n", &record.ID, &record.name, &record.amount, &record.price);
+						    
+						    if(ID==record.ID)
+						    {	system("cls");
+								printf("\n\n\t\tID: %d\n",record.ID);
+								printf("\t\tNAME: %s\n",record.name);
+								printf("\t\tAMOUNT: %d\n",record.amount);
+								printf("\t\tPRICE: %5.2f\n",record.price);
+								printf("\t\tEXPECTED PROFIT: %5.2f",record.price*record.amount);
+								printf("\n");
+								printf("\npress any key to continue...");
 								checker=1;
-								printf("ID: %d\n",record[i].ID);
-								gotoxy(20,8);
-								printf("NAME: %s\n",record[i].name);
-								gotoxy(20,9);
-								printf("Amount: %d\n",record[i].amount);
-								gotoxy(20,10);
-								printf("PRICE: %5.2f\n",record[i].price);
-								printf("\n\n");
-								printf("Search again? y/n\n");
-								if(getch()=='y')
-								{
-									search();
-								}
-								else
-								{
-									menu();
-								}
 							}
-							if(checker!=1)
-							{
-								gotoxy(20,12);
-								printf("No Entry found!!\n");
-								gotoxy(20,14);								
-								printf("Press any key to search again\n");
-								getch();
-								search();
-							}
-						i++;					
+							else
+								continue;
+                    }
+                    	if(checker==0)
+                    	{
+                    		printf("\n\t\t\tNO ENTRY FOUND!!!\n");
+                    		printf("\npress any key to continue...");
 						}
-						break;
-						menu();	
-						break;
-					}
-					case 3:
-					{
-						menu();
-						break;
-					}
-				}
+                    	getch();
+                    	search();
+				break;
 			}
+			case 2:
+			{	
+				system("cls");
+				printf("\n\t\t\tSEARCH BY NAME\n");
+				printf("\t\t\tNAME: ");
+				scanf("%s",&name);
+				
+				while(!feof(file1))
+					{
+                    	fscanf(file1, "%d %s %d %f\n", &record.ID, &record.name, &record.amount, &record.price);
+						    
+						    if(strcmp(record.name,name)==0)
+						    {	system("cls");
+								printf("\n\n\t\tID: %d\n",record.ID);
+								printf("\t\tNAME: %s\n",record.name);
+								printf("\t\tAMOUNT: %d\n",record.amount);
+								printf("\t\tPRICE: %5.2f\n",record.price);
+								printf("\t\tEXPECTED PROFIT: %5.2f",record.price*record.amount);
+								printf("\n");
+								printf("\npress any key to continue...");
+								checker=1;
+							}
+							else
+								continue;
+                    }
+                    	if(checker==0)
+                    	{
+                    		printf("\n\t\t\tNO ENTRY FOUND!!!\n");
+                    		printf("\npress any key to continue...");
+						}
+                    	getch();
+                    	search();
+				break;
+				
+			}
+			case 3:
+			{
+				menu();
+				break;
+			}
+		}
+	
 	fclose(file1);
-	}
+}
 
 //minor functions
 void menu()
