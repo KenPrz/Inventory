@@ -12,6 +12,7 @@ void menu();
 void add();
 void edit();
 void view();
+void view2();
 void search();
 void switcher(int var);
 void gotoxy (int x, int y)
@@ -118,10 +119,109 @@ void add()
 }
 void edit()
 {	
-	system("cls");
-	printf("Inventory Editing goes here");
-	getch();
-	menu();
+ 
+    int i, j, num, k, choice;
+    char x;
+    struct product record[2000];
+    FILE *fp = fopen ("products.txt", "a+");
+    FILE *fp1 = fopen("copy.txt", "w+");
+    system("cls");
+    
+    printf("\t\t\t\tRECORDDS\n\n");
+                    for(i = 0; !feof(fp); i++)
+					{
+                        fscanf(fp, "%d %s %d %f\n", &record[i].ID, &record[i].name, &record[i].amount, &record[i].price);
+                        k = i + 1;
+                    }
+        view2();
+        printf("\n");
+        printf("\nEnter 'x' to go back to main menu\n\n");            
+        printf("\nEnter ID to edit product: ");
+        scanf("%i", &num);
+        if(num=='x')
+            menu();
+        system("cls");
+        
+        for(i = 0; !feof(fp); i++)
+        {
+            fscanf(fp, "%d %s %d %f\n", &record[i].ID, &record[i].name, &record[i].amount, &record[i].price);
+        }
+        
+        for(j=0; j < k ; j++)
+        {
+            if(record[j].ID==num)
+        {
+            choose_again:
+            printf("\tID \t\tNAME \t\tAMOUNT \t\tPRICE\n\n");
+            printf("        %d            %s          %d             %.2f\n", record[j].ID, record[j].name, record[j].amount, record[j].price);
+            printf("\n");           
+            printf("\t\t\tPlease choose what to edit\n");
+            printf("\t1. Name\n");
+            printf("\t2. Amount\n");
+            printf("\t3. Price\n");
+            printf("\tEnter number of choice: ");
+            scanf("%i", &choice);
+            if(choice==1)
+            {
+                printf("\n");
+                printf("\tOriginal name: %s\n", record[j].name);
+                printf("\tEnter new product name: ");
+                scanf("%s", record[j].name);
+                printf("\n\tRecord updated!\n");
+                printf("\tID \t\tNAME \t\tAMOUNT \t\tPRICE\n\n");
+                printf("        %d            %s          %d             %.2f\n", record[j].ID, record[j].name, record[j].amount, record[j].price);
+                fprintf(fp, "%d \t%s \t%d \t%f\n", record[j].ID, record[j].name, record[j].amount, record[j].price);
+                
+            }
+            else if(choice==2)
+            {
+                printf("\n");
+                printf("\tOriginal amount: %d\n", record[j].amount);
+                printf("\tEnter new amount: ");
+                scanf("%d", &record[j].amount);
+                printf("\n\tRecord updated!\n");
+                printf("\tID \t\tNAME \t\tAMOUNT \t\tPRICE\n\n");
+                printf("        %d            %s          %d             %.2f\n", record[j].ID, record[j].name, record[j].amount, record[j].price);
+                fprintf(fp, "%d \t%s \t%d \t%f\n", record[j].ID, record[j].name, record[j].amount, record[j].price);
+            }
+            else if(choice==3)
+            {
+                printf("\n");
+                printf("\tOriginal price: %2.f\n", record[j].price);
+                printf("\tEnter new price: ");
+                scanf("%f", &record[j].price);
+                printf("\n\tRecord updated!\n");
+                printf("\tID \t\tNAME \t\tAMOUNT \t\tPRICE\n\n");
+                printf("        %d            %s          %d             %.2f\n", record[j].ID, record[j].name, record[j].amount, record[j].price);
+                fprintf(fp, "%d \t%s \t%d \t%f\n", record[j].ID, record[j].name, record[j].amount, record[j].price);
+            }
+            else{
+                system("cls");
+                goto choose_again;
+                }
+        }   
+        }
+        for(i = 0; i < k; i++)
+        {
+            fprintf(fp1, "%d \t%s \t%d \t%f\n", record[i].ID, record[i].name, record[i].amount, record[i].price);
+        }
+        
+        fclose(fp);
+        fclose(fp1);
+    
+        remove("products.txt");
+        rename("copy.txt", "products.txt");
+    
+        printf("\n\n\tThe record was successfully updated!\n");
+        
+        printf("\n\tDo you want to edit other product? (y/n)?");
+        scanf(" %c", &x);
+        if(x == 'y')
+            edit();
+        else
+            menu();
+            
+    fclose(fp);
 }
 void view()
 {
@@ -200,7 +300,7 @@ void search()
 								printf("\t\tNAME: %s\n",record.name);
 								printf("\t\tAMOUNT: %d\n",record.amount);
 								printf("\t\tPRICE: %5.2f\n",record.price);
-								printf("\t\tEXPECTED PROFIT: %5.2f",record.price*record.amount);
+								printf("\n\t\tEXPECTED PROFIT: %5.2f",record.price*record.amount);
 								printf("\n");
 								printf("\npress any key to continue...");
 								checker=1;
@@ -234,7 +334,7 @@ void search()
 								printf("\t\tNAME: %s\n",record.name);
 								printf("\t\tAMOUNT: %d\n",record.amount);
 								printf("\t\tPRICE: %5.2f\n",record.price);
-								printf("\t\tEXPECTED PROFIT: %5.2f",record.price*record.amount);
+								printf("\n\t\tEXPECTED PROFIT: %5.2f",record.price*record.amount);
 								printf("\n");
 								printf("\npress any key to continue...");
 								checker=1;
@@ -287,9 +387,31 @@ void menu()
 	switcher(var);
 }
 int randomize(int random_num)
-{
-	srand(time(NULL)); // randomize seed
-	return random_num = (rand() % (100000 - 999999 + 1)) + 100000;
+{	
+    struct product record;
+    int number_generated;
+    FILE *fp = fopen ("products.txt", "r");
+    	if(fp==NULL)
+    	{
+    		printf("ERROR FILE READING IN RANDOMIZE FUNCTION!!!\n");
+    		exit(1);
+		}
+		else
+		{
+			srand(time(NULL));
+			random_num = (rand() % (100000 - 999999 + 1)) + 100000;
+            
+			while(!feof(fp))
+			{
+                fscanf(fp, "%d %s %d %f\n", &record.ID, &record.name, &record.amount, &record.price);
+                if(random_num==record.ID)
+                {
+                	random_num=randomize(random_num);
+				}
+			}
+			number_generated=random_num;
+			return number_generated;
+		}
 }
 void switcher(int var)
 {
@@ -320,8 +442,39 @@ void switcher(int var)
 			system("cls");
 			printf("               Thank you for using This product\n");
 			printf("                        Copyright: 2021\n");
-			exit(1);
+			exit(0);
 			break;
 		}
 	}
+}
+void view2()
+{
+       struct product record;
+        FILE *fp;
+        int i, j=4,ID;
+        float profit,temp;
+        
+        fp = fopen ("products.txt", "r");
+        
+        system("cls");
+        printf("\t\t\t\tRECORDDS\n\n");
+        printf("\n ID           NAME          AMOUNT          PRICE          EXPECTED PROFIT");
+                    while(!feof(fp))
+					{
+                    	fscanf(fp, "%d %s %d %f\n", &record.ID, &record.name, &record.amount, &record.price);
+						    gotoxy(1,j);
+							printf("%d",record.ID);
+							gotoxy(14,j);
+							printf("%s",record.name);
+							gotoxy(28,j);
+							printf("%d",record.amount);
+							gotoxy(44,j);
+							printf("%5.2f",record.price);
+							gotoxy(59,j);
+							printf("%.2f\n",record.price*record.amount);
+							temp=record.price*record.amount;
+							profit=profit+temp;
+							printf("\n\n");
+							i++,j++;
+                    }	
 }
