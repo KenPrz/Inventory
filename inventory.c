@@ -4,8 +4,6 @@
 #include<string.h>                 
 #include<ctype.h>                        
 #include<time.h>
-#include<windows.h>
-COORD coord = {0, 0};
 int randomize(int random_num);
 void login();
 void menu();
@@ -15,11 +13,6 @@ void view();
 void view2();
 void search();
 void switcher(int var);
-void gotoxy (int x, int y)
-{
-coord.X = x; coord.Y = y; 
-SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
-}
 struct product
 {
 	int ID,amount;
@@ -28,6 +21,7 @@ struct product
 };
 int main()
 {
+	
 	system("color 70");
 	login();
 	menu();
@@ -38,13 +32,14 @@ void login()
 {
 	system("cls");
 	char password[10]={"user"};
-	char d[25]="Password Protected";
 	char ch,pass[10];
 	int i=0,j;
 	login:
-	printf("\n\n					Welcome to ABC Inventory Management\n\n");
-	printf("   Please enter your password: ");
-
+	printf("\n\n");
+	printf("                       |-------------------------------------|\n");
+	printf("                       | Welcome to ABC Inventory Management |\n");
+	printf("                       |-------------------------------------|\n");
+	printf("\n                        Password:");
 	while(ch!=13)
 	{
 		ch=getch();
@@ -57,9 +52,11 @@ void login()
 	}
 	pass[i] = '\0';
 	if(strcmp(pass,password)==0)
-	{
-		printf("\nAccess Granted!!!\n");
-		printf("\nPress any key to countinue.....");
+	{	
+		system("cls");
+		printf("\n                       ACCESS GRANTED!!!\n");
+		printf("\n                       Press any key to countinue.....");
+		getch();
 	}
 	else
 	{
@@ -118,22 +115,24 @@ void add()
                 menu();
 }
 void edit()
-{	
- 
+{   
     int i, j, num, k, choice;
     char x;
-    struct product record[2000];
+    struct product record[200];
     FILE *fp = fopen ("products.txt", "a+");
     FILE *fp1 = fopen("copy.txt", "w+");
     system("cls");
     
     printf("\t\t\t\tRECORDDS\n\n");
-                    for(i = 0; !feof(fp); i++)
-					{
+    printf("\t\t\tEdit Current Inventory\n\n");
+    
+        printf("ID            NAME           AMOUNT         PRICE          EXPECTED PROFIT\n");
+                    for(i = 0; !feof(fp); i++){
                         fscanf(fp, "%d %s %d %f\n", &record[i].ID, &record[i].name, &record[i].amount, &record[i].price);
+							printf("%-14d%-15s%-15d%-15.2lf%-15.2lf\n",record[i].ID,record[i].name,record[i].amount,record[i].price,record[i].price*record[i].amount);
                         k = i + 1;
                     }
-        view2();
+        
         printf("\n");
         printf("\nEnter 'x' to go back to main menu\n\n");            
         printf("\nEnter ID to edit product: ");
@@ -150,57 +149,60 @@ void edit()
         for(j=0; j < k ; j++)
         {
             if(record[j].ID==num)
-        {
-            choose_again:
-            printf("\tID \t\tNAME \t\tAMOUNT \t\tPRICE\n\n");
-            printf("        %d            %s          %d             %.2f\n", record[j].ID, record[j].name, record[j].amount, record[j].price);
-            printf("\n");           
-            printf("\t\t\tPlease choose what to edit\n");
-            printf("\t1. Name\n");
-            printf("\t2. Amount\n");
-            printf("\t3. Price\n");
-            printf("\tEnter number of choice: ");
-            scanf("%i", &choice);
-            if(choice==1)
-            {
-                printf("\n");
-                printf("\tOriginal name: %s\n", record[j].name);
-                printf("\tEnter new product name: ");
-                scanf("%s", record[j].name);
-                printf("\n\tRecord updated!\n");
-                printf("\tID \t\tNAME \t\tAMOUNT \t\tPRICE\n\n");
-                printf("        %d            %s          %d             %.2f\n", record[j].ID, record[j].name, record[j].amount, record[j].price);
-                fprintf(fp, "%d \t%s \t%d \t%f\n", record[j].ID, record[j].name, record[j].amount, record[j].price);
-                
-            }
-            else if(choice==2)
-            {
-                printf("\n");
-                printf("\tOriginal amount: %d\n", record[j].amount);
-                printf("\tEnter new amount: ");
-                scanf("%d", &record[j].amount);
-                printf("\n\tRecord updated!\n");
-                printf("\tID \t\tNAME \t\tAMOUNT \t\tPRICE\n\n");
-                printf("        %d            %s          %d             %.2f\n", record[j].ID, record[j].name, record[j].amount, record[j].price);
-                fprintf(fp, "%d \t%s \t%d \t%f\n", record[j].ID, record[j].name, record[j].amount, record[j].price);
-            }
-            else if(choice==3)
-            {
-                printf("\n");
-                printf("\tOriginal price: %2.f\n", record[j].price);
-                printf("\tEnter new price: ");
-                scanf("%f", &record[j].price);
-                printf("\n\tRecord updated!\n");
-                printf("\tID \t\tNAME \t\tAMOUNT \t\tPRICE\n\n");
-                printf("        %d            %s          %d             %.2f\n", record[j].ID, record[j].name, record[j].amount, record[j].price);
-                fprintf(fp, "%d \t%s \t%d \t%f\n", record[j].ID, record[j].name, record[j].amount, record[j].price);
-            }
-            else{
-                system("cls");
-                goto choose_again;
-                }
-        }   
+       		{
+            	do
+            	{	
+						system("cls");
+      		  			printf("\n\t\tID            NAME           AMOUNT         PRICE          EXPECTED PROFIT\n");
+						printf("\t\t%-14d%-15s%-15d%-15.2lf%-15.2lf\n",record[j].ID,record[j].name,record[j].amount,record[j].price,record[j].price*record[j].amount);
+        		    	printf("\n");           
+        	 	   		printf("\t\t\tPlease choose what to edit\n");
+         				printf("\t1. Name\n");
+         	 	  		printf("\t2. Amount\n");
+         	   			printf("\t3. Price\n");
+          	  			printf("\tEnter number of choice: ");
+          	  			scanf("%i", &choice);
+            		if(choice==1)
+            		{
+                		printf("\n");
+                		printf("\tOriginal name: %s\n", record[j].name);
+                		printf("\tEnter new product name: ");
+                		scanf("%s", record[j].name);
+                		system("cls");
+                		printf("\n\tRecord updated!\n");
+        				printf("\n\t\tID            NAME           AMOUNT         PRICE          EXPECTED PROFIT\n");
+						printf("\t\t%-14d%-15s%-15d%-15.2lf%-15.2lf\n",record[j].ID,record[j].name,record[j].amount,record[j].price,record[j].price*record[j].amount);
+                		fprintf(fp, "%d \t%s \t%d \t%f\n", record[j].ID, record[j].name, record[j].amount, record[j].price);
+            		}
+            		else if(choice==2)
+          	  		{
+              			printf("\n");
+                		printf("\tOriginal amount: %d\n", record[j].amount);
+                		printf("\tEnter new amount: ");
+               	 		scanf("%d", &record[j].amount);
+               	 		system("cls");
+               	 		printf("\n\tRecord updated!\n");
+        				printf("\n\t\tID            NAME           AMOUNT         PRICE          EXPECTED PROFIT\n");
+						printf("\t\t%-14d%-15s%-15d%-15.2lf%-15.2lf\n",record[j].ID,record[j].name,record[j].amount,record[j].price,record[j].price*record[j].amount);
+                		fprintf(fp, "%d \t%s \t%d \t%f\n", record[j].ID, record[j].name, record[j].amount, record[j].price);
+            		}
+            		else if(choice==3)
+            		{
+                		printf("\n");
+                		printf("\tOriginal price: %2.f\n", record[j].price);
+                		printf("\tEnter new price: ");
+                		scanf("%f", &record[j].price);
+                		system("cls");
+                		printf("\n\tRecord updated!\n");
+        				printf("\n\t\tID            NAME           AMOUNT         PRICE          EXPECTED PROFIT\n");
+						printf("\t\t%-14d%-15s%-15d%-15.2lf%-15.2lf\n",record[j].ID,record[j].name,record[j].amount,record[j].price,record[j].price*record[j].amount);
+                		fprintf(fp, "%d \t%s \t%d \t%f\n", record[j].ID, record[j].name, record[j].amount, record[j].price);
+            		}
+            	
+				}while(choice>=4||choice<=0);
+        	}   
         }
+        
         for(i = 0; i < k; i++)
         {
             fprintf(fp1, "%d \t%s \t%d \t%f\n", record[i].ID, record[i].name, record[i].amount, record[i].price);
@@ -213,7 +215,6 @@ void edit()
         rename("copy.txt", "products.txt");
     
         printf("\n\n\tThe record was successfully updated!\n");
-        
         printf("\n\tDo you want to edit other product? (y/n)?");
         scanf(" %c", &x);
         if(x == 'y')
@@ -227,34 +228,24 @@ void view()
 {
         struct product record;
         FILE *fp;
-        int i, j=4,ID;
+        int i, j=5,ID;
         float profit,temp;
         
         fp = fopen ("products.txt", "r");
         
         system("cls");
-        printf("\t\t\t\tRECORDDS\n\n");
-        printf("\n ID           NAME          AMOUNT          PRICE          EXPECTED PROFIT");
+        printf("\n\n\t\t\t\t\t\tRECORDDS\n\n");
+        printf("\t\t ID            NAME           AMOUNT         PRICE          EXPECTED PROFIT");
+        printf("\n\t\t----------------------------------------------------------------------------\n");
                     while(!feof(fp))
 					{
                     	fscanf(fp, "%d %s %d %f\n", &record.ID, &record.name, &record.amount, &record.price);
-						    gotoxy(1,j);
-							printf("%d",record.ID);
-							gotoxy(14,j);
-							printf("%s",record.name);
-							gotoxy(28,j);
-							printf("%d",record.amount);
-							gotoxy(44,j);
-							printf("%5.2f",record.price);
-							gotoxy(59,j);
-							printf("%.2f\n",record.price*record.amount);
-							temp=record.price*record.amount;
-							profit=profit+temp;
-							printf("\n\n");
-							i++,j++;
-                    }
-                    printf("-------------------------------------------------\n");
-                    printf(" OVERALL EXPECTED PROFIT: Php %.2f",profit);
+							printf("\t\t %-14d%-15s%-15d%-15.2lf%-15.2lf\n",record.ID,record.name,record.amount,record.price,record.price*record.amount);
+                    		temp=record.price*record.amount;
+                    		profit=profit+temp;
+					}
+        printf("\t\t----------------------------------------------------------------------------\n");
+                    printf("\t\t OVERALL EXPECTED PROFIT: Php %.2f",profit);
         fclose(fp);
         
         printf("\n\nPress any key to retrun to main menu\n\n");
@@ -368,20 +359,21 @@ void menu()
 	int var;
 	do
 	{
-		system("cls");	
-		printf("\n\n			What do you want to do?\n\n");
-	
-		printf("                            1.Add inventory\n");
-		printf("                           -------------------\n");
-		printf("                            2.Edit/Update inventory\n");
-		printf("                           -------------------\n");
-		printf("                            3.View inventory\n");
-		printf("                           -------------------\n");
-		printf("                            4.Search inventory\n");
-		printf("                           -------------------\n");
-		printf("                            5.Exit\n");
-		printf("------------------------------------------------------------------\n");
-		printf("Answer: ");
+		system("cls");
+		printf("\n\n");
+		printf("                         >>> What do you want to do? <<<\n");
+		printf("                          ______________________________\n");
+		printf("                          | 1.Add inventory            |\n");
+		printf("                          |----------------------------|\n");
+		printf("                          | 2.Edit/Update inventory    |\n");
+		printf("                          |----------------------------|\n");
+		printf("                          | 3.View inventory           |\n");
+		printf("                          |----------------------------|\n");
+		printf("                          | 4.Search inventory         |\n");
+		printf("                          |----------------------------|\n");
+		printf("                          | 5.Exit                     |\n");
+		printf("                          |----------------------------|\n\n");
+		printf("                          Answer: ");
 		scanf("%d",&var);
 	}while(var>=6 || var<=0);
 	switcher(var);
@@ -440,41 +432,11 @@ void switcher(int var)
 		case 5:
 		{
 			system("cls");
-			printf("               Thank you for using This product\n");
-			printf("                        Copyright: 2021\n");
+			printf("\n\n\n\n\t\t\tThank you for using This product\n");
+			printf("\t\t\t\tCopyright: 2021\n\n\n");
+			printf("\t\t\thttps://github.com/traxex123lord\n");
 			exit(0);
 			break;
 		}
 	}
-}
-void view2()
-{
-       struct product record;
-        FILE *fp;
-        int i, j=4,ID;
-        float profit,temp;
-        
-        fp = fopen ("products.txt", "r");
-        
-        system("cls");
-        printf("\t\t\t\tRECORDDS\n\n");
-        printf("\n ID           NAME          AMOUNT          PRICE          EXPECTED PROFIT");
-                    while(!feof(fp))
-					{
-                    	fscanf(fp, "%d %s %d %f\n", &record.ID, &record.name, &record.amount, &record.price);
-						    gotoxy(1,j);
-							printf("%d",record.ID);
-							gotoxy(14,j);
-							printf("%s",record.name);
-							gotoxy(28,j);
-							printf("%d",record.amount);
-							gotoxy(44,j);
-							printf("%5.2f",record.price);
-							gotoxy(59,j);
-							printf("%.2f\n",record.price*record.amount);
-							temp=record.price*record.amount;
-							profit=profit+temp;
-							printf("\n\n");
-							i++,j++;
-                    }	
 }
