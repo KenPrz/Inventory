@@ -10,23 +10,24 @@ void menu();
 void add();
 void edit();
 void view();
-void view2();
+void del();
 void search();
 void switcher(int var);
+void authenticate();
 struct product
 {
 	int ID,amount;
 	char name[20];
 	float price;
 };
+
 int main()
 {
-	
 	system("color 70");
 	login();
-	menu();
 return 0;
 }
+
 //Major functions
 void login()
 {
@@ -57,6 +58,7 @@ void login()
 		printf("\n                       ACCESS GRANTED!!!\n");
 		printf("\n                       Press any key to countinue.....");
 		getch();
+		menu();
 	}
 	else
 	{
@@ -89,9 +91,10 @@ void add()
 					   	   prod[i].ID=randomize(prod[i].ID);
                            printf("\n\n\tID:%d\n",prod[i].ID);
                            fflush(stdin);
-                           printf("\n\n\tNOTE: please use underscore instead of spaces\n");
+                           
+						   printf("\n\n\tNOTE: please use underscore instead of spaces\n");
                            printf("\n\tProduct name: ");
-                           gets(prod[i].name);
+                           gets(prod[i].name);;
                            fflush(stdin);
                            
                            printf("\n\tAmount of product: ");
@@ -118,7 +121,7 @@ void edit()
 {   
     int i, j, num, k, choice;
     char x;
-    struct product record[200];
+    struct product record[10000];
     FILE *fp = fopen ("products.txt", "a+");
     FILE *fp1 = fopen("copy.txt", "w+");
     system("cls");
@@ -160,7 +163,7 @@ void edit()
          				printf("\t1. Name\n");
          	 	  		printf("\t2. Amount\n");
          	   			printf("\t3. Price\n");
-          	  			printf("\tEnter number of choice: ");
+          	  			printf("\tAnswer: \n");
           	  			scanf("%i", &choice);
             		if(choice==1)
             		{
@@ -197,8 +200,7 @@ void edit()
         				printf("\n\t\tID            NAME           AMOUNT         PRICE          EXPECTED PROFIT\n");
 						printf("\t\t%-14d%-15s%-15d%-15.2lf%-15.2lf\n",record[j].ID,record[j].name,record[j].amount,record[j].price,record[j].price*record[j].amount);
                 		fprintf(fp, "%d \t%s \t%d \t%f\n", record[j].ID, record[j].name, record[j].amount, record[j].price);
-            		}
-            	
+            		}            	
 				}while(choice>=4||choice<=0);
         	}   
         }
@@ -352,7 +354,64 @@ void search()
 	
 	fclose(file1);
 }
-
+void del()
+{
+	system("cls");
+	authenticate();
+	
+	int i, j, num, k, choice;
+    char x;
+    struct product record[10000];
+    FILE *fp = fopen ("products.txt", "a+");
+    FILE *fp1 = fopen("copy.txt", "w+");
+    system("cls");
+    
+    printf("\t\t\t\tRECORDDS\n\n");
+    printf("\t\t\tDelete an inventory item\n\n");
+    
+        printf("ID            NAME           AMOUNT         PRICE          EXPECTED PROFIT\n");
+                    for(i = 0; !feof(fp); i++){
+                        fscanf(fp, "%d %s %d %f\n", &record[i].ID, &record[i].name, &record[i].amount, &record[i].price);
+							printf("%-14d%-15s%-15d%-15.2lf%-15.2lf\n",record[i].ID,record[i].name,record[i].amount,record[i].price,record[i].price*record[i].amount);
+                        k = i + 1;
+                    }
+        
+        printf("\n");
+        printf("\nEnter 'x' to go back to main menu\n\n");            
+        printf("\nEnter ID of the to be deleted product: ");
+        scanf("%i", &num);
+        if(num=='x')
+            menu();
+        	system("cls");
+        	for(i = 0; !feof(fp); i++)
+        	{
+           		fscanf(fp, "%d %s %d %f\n", &record[i].ID, &record[i].name, &record[i].amount, &record[i].price);
+        	}
+       		for(j=0; j < k ; j++)
+        	{
+            	if(record[j].ID==num)
+       			{
+					continue;
+        		}
+				else
+					fprintf(fp1, "%d \t%s \t%d \t%f\n", record[j].ID, record[j].name, record[j].amount, record[j].price);
+        	}
+        fclose(fp);
+        fclose(fp1);
+    
+        remove("products.txt");
+        rename("copy.txt", "products.txt");
+    
+        printf("\n\n\tThe record was successfully updated!\n");
+        printf("\n\tDo you want to edit other product? (y/n)?");
+        scanf(" %c", &x);
+        if(x == 'y')
+            edit();
+        else
+            menu();
+            
+    fclose(fp);
+}
 //minor functions
 void menu()
 {
@@ -360,7 +419,10 @@ void menu()
 	do
 	{
 		system("cls");
-		printf("\n\n");
+		time_t t;
+    	time(&t);
+    	printf("\n                            %s", ctime(&t));
+		printf("\n");
 		printf("                         >>> What do you want to do? <<<\n");
 		printf("                          ______________________________\n");
 		printf("                          | 1.Add inventory            |\n");
@@ -371,7 +433,9 @@ void menu()
 		printf("                          |----------------------------|\n");
 		printf("                          | 4.Search inventory         |\n");
 		printf("                          |----------------------------|\n");
-		printf("                          | 5.Exit                     |\n");
+		printf("                          | 5.Delete an entry          |\n");
+		printf("                          |----------------------------|\n");
+		printf("                          | 6.Exit                     |\n");
 		printf("                          |----------------------------|\n\n");
 		printf("                          Answer: ");
 		scanf("%d",&var);
@@ -431,6 +495,11 @@ void switcher(int var)
 		}
 		case 5:
 		{
+			del();
+			break;
+		}
+		case 6:
+		{
 			system("cls");
 			printf("\n\n\n\n\t\t\tThank you for using This product\n");
 			printf("\t\t\t\tCopyright: 2021\n\n\n");
@@ -438,5 +507,40 @@ void switcher(int var)
 			exit(0);
 			break;
 		}
+	}
+}
+void authenticate()
+{
+	system("cls");
+	char password[10]={"user"};
+	char ch,pass[10];
+	int i=0,j;
+		printf("\n\n\t\t Please enter the passowrd: ");
+	
+		while(ch!=13)
+	{
+		ch=getch();
+		if(ch!=13 && ch!=8)
+		{
+			putch('*');
+			pass[i] = ch;
+			i++;
+		}
+	}
+	pass[i] = '\0';
+	if(strcmp(pass,password)==0)
+	{	
+		system("cls");
+		printf("\n\t\tACCESS GRANTED!!!\n");
+		printf("\n\t\tPress any key to countinue.....");
+		getch();
+	}
+	else
+	{
+		printf("\n\nINCORRECT PASSWORD!!\n");
+		printf("You will be returned to the login menu\n");
+		printf("press any key to continue...\n");
+		getch();
+		login();
 	}
 }
