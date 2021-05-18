@@ -62,7 +62,7 @@ void login()
 	}
 	else
 	{
-		printf("\n\nIncorrect password!!\n press any key to try again...");
+		printf("\n\n\t\t\tIncorrect password!!\n\t\t\tpress any key to try again...");
 		getch();
 		login();
 	}
@@ -77,7 +77,7 @@ void add()
         
         if((file1 = fopen("products.txt", "a+")) == NULL)
             printf("Error: The file does not exist");
-			else 
+		else 
 			{
                 system("cls");
                     printf("'\t\tADD RECORD OF PRODUCT");
@@ -115,22 +115,37 @@ void add()
             if(x == 'y')
                 add();
             else
-                menu();
+			{
+				system("cls");
+            	printf("\n\n\t\t\tProgram requires a relaunch after adding an entry...\n");
+            	//will be fixed soon.
+            	printf("\t\t\tPress any key to continue...\n");
+            	getch();
+            	exit(0);
+        	}
 }
 void edit()
-{   
+{
     int i, j, num, k, choice;
     char x;
     struct product record[10000];
     FILE *fp = fopen ("products.txt", "a+");
     FILE *fp1 = fopen("copy.txt", "w+");
     system("cls");
+    if(fp==NULL||fp1==NULL)
+    {
+    	system("cls");
+    	printf("\n\n\t\t\tERROR READING FILE IN EDIT FUNCTION\n");
+    	getch();
+    	menu();
+	}
     
     printf("\t\t\t\tRECORDDS\n\n");
     printf("\t\t\tEdit Current Inventory\n\n");
     
         printf("ID            NAME           AMOUNT         PRICE          EXPECTED PROFIT\n");
-                    for(i = 0; !feof(fp); i++){
+                    for(i = 0; !feof(fp); i++)
+					{
                         fscanf(fp, "%d %s %d %f\n", &record[i].ID, &record[i].name, &record[i].amount, &record[i].price);
 							printf("%-14d%-15s%-15d%-15.2lf%-15.2lf\n",record[i].ID,record[i].name,record[i].amount,record[i].price,record[i].price*record[i].amount);
                         k = i + 1;
@@ -163,7 +178,7 @@ void edit()
          				printf("\t1. Name\n");
          	 	  		printf("\t2. Amount\n");
          	   			printf("\t3. Price\n");
-          	  			printf("\tAnswer: \n");
+          	  			printf("\tAnswer: ");
           	  			scanf("%i", &choice);
             		if(choice==1)
             		{
@@ -234,6 +249,14 @@ void view()
         float profit,temp;
         
         fp = fopen ("products.txt", "r");
+        	if(fp==NULL)
+			{
+				system("cls");
+				printf("\nFile is empty please add an entry...");
+				printf("\nPress any key to continue...\n");
+				getch();
+				menu();
+			}
         
         system("cls");
         printf("\n\n\t\t\t\t\t\tRECORDDS\n\n");
@@ -400,13 +423,13 @@ void del()
         fclose(fp1);
     
         remove("products.txt");
-        rename("copy.txt", "products.txt");
+        rename("copy.txt","products.txt");
     
         printf("\n\n\tThe record was successfully updated!\n");
-        printf("\n\tDo you want to edit other product? (y/n)?");
+        printf("\n\tDo you want to delete another product? (y/n)?");
         scanf(" %c", &x);
         if(x == 'y')
-            edit();
+            del();
         else
             menu();
             
@@ -423,7 +446,7 @@ void menu()
     	time(&t);
     	printf("\n                            %s", ctime(&t));
 		printf("\n");
-		printf("                         >>> What do you want to do? <<<\n");
+		printf("                          >>> What do you want to do? <<<\n");
 		printf("                          ______________________________\n");
 		printf("                          | 1.Add inventory            |\n");
 		printf("                          |----------------------------|\n");
@@ -439,7 +462,7 @@ void menu()
 		printf("                          |----------------------------|\n\n");
 		printf("                          Answer: ");
 		scanf("%d",&var);
-	}while(var>=6 || var<=0);
+	}while(var>=7 || var<=0);
 	switcher(var);
 }
 int randomize(int random_num)
