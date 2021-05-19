@@ -55,8 +55,11 @@ void login()
 	if(strcmp(pass,password)==0)
 	{	
 		system("cls");
-		printf("\n                       ACCESS GRANTED!!!\n");
-		printf("\n                       Press any key to countinue.....");
+	printf("\n\n");
+	printf("\t\t\t|-------------------------------------|\n");
+	printf("\t\t\t|           ACCESS GRANTED!!          |\n");
+	printf("\t\t\t|-------------------------------------|\n");
+	printf("\n\n\t\t\t Press any key to continue...");
 		getch();
 		menu();
 	}
@@ -126,7 +129,7 @@ void add()
 }
 void edit()
 {
-    int i, j, num, k, choice;
+    int i, j, num, k, choice,checker=0;
     char x;
     struct product record[10000];
     FILE *fp = fopen ("products.txt", "a+");
@@ -147,7 +150,7 @@ void edit()
                     for(i = 0; !feof(fp); i++)
 					{
                         fscanf(fp, "%d %s %d %f\n", &record[i].ID, &record[i].name, &record[i].amount, &record[i].price);
-							printf("%-14d%-15s%-15d%-15.2lf%-15.2lf\n",record[i].ID,record[i].name,record[i].amount,record[i].price,record[i].price*record[i].amount);
+							printf(" %-14d%-15s%-15d%-15.2lf%-15.2lf\n",record[i].ID,record[i].name,record[i].amount,record[i].price,record[i].price*record[i].amount);
                         k = i + 1;
                     }
         
@@ -168,11 +171,13 @@ void edit()
         {
             if(record[j].ID==num)
        		{
+       			checker=1;
+       			
             	do
             	{	
 						system("cls");
       		  			printf("\n\t\tID            NAME           AMOUNT         PRICE          EXPECTED PROFIT\n");
-						printf("\t\t%-14d%-15s%-15d%-15.2lf%-15.2lf\n",record[j].ID,record[j].name,record[j].amount,record[j].price,record[j].price*record[j].amount);
+						printf("\t\t %-14d%-15s%-15d%-15.2lf%-15.2lf\n",record[j].ID,record[j].name,record[j].amount,record[j].price,record[j].price*record[j].amount);
         		    	printf("\n");           
         	 	   		printf("\t\t\tPlease choose what to edit\n");
          				printf("\t1. Name\n");
@@ -225,6 +230,20 @@ void edit()
             fprintf(fp1, "%d \t%s \t%d \t%f\n", record[i].ID, record[i].name, record[i].amount, record[i].price);
         }
         
+        if(checker==0)
+		{
+        	fclose(fp);
+        	fclose(fp1);
+    
+     	   	remove("products.txt");
+       		rename("copy.txt", "products.txt");
+    
+        	printf("\n\n\tINVALID ID!!!\n");
+			printf("\tpress any key to continue...\n");
+            getch();
+			menu();				
+		}
+        
         fclose(fp);
         fclose(fp1);
     
@@ -238,14 +257,13 @@ void edit()
             edit();
         else
             menu();
-            
-    fclose(fp);
 }
 void view()
 {
         struct product record;
         FILE *fp;
         int i, j=5,ID;
+        char checker[20];
         float profit,temp;
         
         fp = fopen ("products.txt", "r");
@@ -257,7 +275,7 @@ void view()
 				getch();
 				menu();
 			}
-        
+			
         system("cls");
         printf("\n\n\t\t\t\t\t\tRECORDDS\n\n");
         printf("\t\t ID            NAME           AMOUNT         PRICE          EXPECTED PROFIT");
@@ -273,7 +291,7 @@ void view()
                     printf("\t\t OVERALL EXPECTED PROFIT: Php %.2f",profit);
         fclose(fp);
         
-        printf("\n\nPress any key to retrun to main menu\n\n");
+        printf("\n\nPress any key to return to main menu\n\n");
 		getch();
 		menu();
 }
@@ -326,8 +344,8 @@ void search()
                     }
                     	if(checker==0)
                     	{
-                    		printf("\n\t\t\tNO ENTRY FOUND!!!\n");
-                    		printf("\npress any key to continue...");
+                    		printf("\n\t\t\tNO ENTRY FOUND!!!");
+                    		printf("\n\t\t\tpress any key to continue...");
 						}
                     	getch();
                     	search();
@@ -432,8 +450,6 @@ void del()
             del();
         else
             menu();
-            
-    fclose(fp);
 }
 //minor functions
 void menu()
@@ -538,7 +554,7 @@ void authenticate()
 	char password[10]={"user"};
 	char ch,pass[10];
 	int i=0,j;
-		printf("\n\n\t\t Please enter the passowrd: ");
+		printf("\n\n\t\t Please enter the password: ");
 	
 		while(ch!=13)
 	{
